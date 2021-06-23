@@ -14,5 +14,6 @@ numpy
 scipy
 matplotlib
 sklearn
+ipykernel
 
 botorch # includes gpytorch, torch as dependencies
