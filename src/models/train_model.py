@@ -155,17 +155,9 @@ def BO_loop(xanes_data,
 
         # generate reconstructions via pca_model
         recon_data = pca_model.inverse_transform(np.array(means).T)
-
-
-        # PCA is unstable w.r.t. sign of components, reconstructions might be inverted. 
-        best_err = np.min( 
-                    [mean_squared_error( all_cpts[:,c], -mid_obs.mean.detach().flatten()), 
-                    mean_squared_error( all_cpts[:,c], mid_obs.mean.detach().flatten())]
-                    )
-        
         errors.append( mean_squared_error(recon_data, xanes_data) )
-        # Select new point
-          
+
+        # Select new point      
         # weight max variances by explained variance ratio, use as criterion
         selected_cpt = np.argmax(pca_model.explained_variance_ratio_ * np.array(variances)[:,i])
         chosen.append(selected_cpt)
@@ -179,4 +171,10 @@ def BO_loop(xanes_data,
         pca_model = PCA(n_components=n_cpts)
         cpts_subset = pca_model.fit_transform(xanes_subset)
 
-    return gp_model, init_obs, train_x, test_x, variances, errors, cpts_subset, chosen
+        info_dict = { 'init_obs': init_obs, 
+                        'train_x':train_x, 
+                        'test_x': test_x,
+                        'chosen': chosen
+                        }
+
+    return gps, variances, errors, info_dict
