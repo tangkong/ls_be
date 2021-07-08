@@ -19,7 +19,7 @@ def plot_component_comp(xanes_data, cpts_subset, train_x, test_x, variances,
 
     mll, gp_model = initialize_model(train_x, train_obj)
     mll.train()
-    mll, info_dict = fit_gpytorch_torch(mll, options={'maxiter':2000, 'lr':0.1})
+    mll, _ = fit_gpytorch_torch(mll, options={'maxiter':2000, 'lr':0.1})
 
     gp_model.eval()
     gp_model.likelihood.eval()
@@ -38,11 +38,9 @@ def plot_component_comp(xanes_data, cpts_subset, train_x, test_x, variances,
     axes[0,0].legend()
 
     # errors
-    for i, r in enumerate(np.array(errors)):
-        axes[0, 1].plot(r, label=f'cpt {i}')
+    axes[0, 1].plot(errors)
     axes[0, 1].set_xlabel('iter')
     axes[0, 1].set_ylabel('Mean squared error')
-    axes[0, 1].legend()
 
     axes[1,0].imshow(all_cpts[:,cth].reshape(32,32), aspect='auto')
     # ax[0,0].imshow(face_image[:,:,1])
