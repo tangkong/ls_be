@@ -69,7 +69,8 @@ from .acquisition import MaxVariance
 
 def BO_loop(xanes_data, 
             BO_iters=100, n_init=10, n_cpts=3, seed=10, acq_func=MaxVariance,
-             optim_options={'maxiter':2000, 'lr':0.1, 'disp':False}):
+            show_iter_output=True,
+            optim_options={'maxiter':2000, 'lr':0.1, 'disp':False}):
 
     """
     Run Bayesian Optimization loop in latent space.  
@@ -128,12 +129,15 @@ def BO_loop(xanes_data,
     # BO Loops
     for i in range(BO_iters):
 
-        print(f'=== iter {i}, ({cpts_subset.shape})')
+        if show_iter_output:
+            print(f'=== iter {i}, ({cpts_subset.shape})', end=' ')
+
         gps = [initialize_model(train_x, torch.Tensor(cpts_subset[:, c])) for c in range(n_cpts)]
         means = [torch.ones(test_x.shape) for x in range(n_cpts)]
         
         for c in range(n_cpts): # grab candidate for each component
-            print(f'-- cpt {c}')
+            if show_iter_output:
+                print(f'-- cpt {c}', end=' ')
 
             mll, gp_model = gps[c]
             mll.train()
@@ -152,6 +156,9 @@ def BO_loop(xanes_data,
             cand_pts[c].append(cands[0].int().detach())
 
             means[c] = mid_obs.mean.detach().numpy() # [1024]
+
+        if show_iter_output:
+            print('\n')
 
         # generate reconstructions via pca_model
         recon_data = pca_model.inverse_transform(np.array(means).T)
@@ -174,7 +181,8 @@ def BO_loop(xanes_data,
         info_dict = { 'init_obs': init_obs, 
                         'train_x':train_x, 
                         'test_x': test_x,
-                        'chosen': chosen
+                        'chosen': chosen,
+                        'curr_cpt_weights': cpts_subset
                         }
 
     return gps, variances, errors, info_dict
