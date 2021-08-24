@@ -1,3 +1,12 @@
+""" 
+A collection of acquisition functions in the gpytorch interface.  
+Analytic acquisition functions provide an acquisition landscape through the 
+.forward() method, from which a maximizer is chosen.  
+
+access to the posterior is possible via self._get_posterior()
+access to training points is possible via X???
+"""
+
 import torch
 from botorch.models.model import Model
 from botorch.acquisition import AnalyticAcquisitionFunction

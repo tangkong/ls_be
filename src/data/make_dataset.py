@@ -71,6 +71,8 @@ def generate_dataset(n_cpts=3, seed=42,
     else: # return end components
         return face_image, xanes_data, xanes_energy, xanes_cpts
 
+def read_xrf_map(fp):
+    return [1]
 
 @click.command()
 @click.argument('input_filepath', type=click.Path(exists=True))

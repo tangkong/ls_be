@@ -15,5 +15,6 @@ scipy
 matplotlib
 sklearn
 ipykernel
+h5py
 
 botorch # includes gpytorch, torch as dependencies
