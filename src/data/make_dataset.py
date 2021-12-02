@@ -34,7 +34,7 @@ def generate_dataset(n_cpts=3, seed=42,
         fp = Path(__file__).parent.parent.parent / 'data/raw/Faces5000.mat'
         x = loadmat(fp)
         faces = x['Faces5000']
-    if xanes is None:
+    if (xanes is None) or (xanes == 'xanes'):
         fp = Path(__file__).parent.parent.parent / 'data/raw/Fe_normMaster1.mat'
         y = loadmat(fp)
         xanes = y['Fe_normMaster1'] # n_energies x n_samples
